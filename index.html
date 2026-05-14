@@ -189,6 +189,11 @@
         const companies = {
             heavy: {
                 sensors: 128, latency: "18ms",
+                smartControl: {
+                    gateway: "Steel-Edge",
+                    action1: { title: "Simular Intervenção", desc: "Forçar desligamento de emergência", button: "EXECUTAR PROTOCOLO", urgency: "critical" },
+                    action2: { title: "Reduzir Cadência", desc: "Redução de 5% no ritmo para equilibrar consumo elétrico de pico", button: "APLICAR AJUSTE", urgency: "warning" }
+                },
                 stats: [
                     { label: "OEE Médio", val: "88.4%", icon: "fa-gauge" },
                     { label: "Geração de Refugo", val: "1.2%", icon: "fa-trash-can" },
@@ -220,6 +225,11 @@
             },
             bev: {
                 sensors: 245, latency: "8ms",
+                smartControl: {
+                    gateway: "BevFlow-Edge",
+                    action1: { title: "Corrigir pH Automaticamente", desc: "Injetar neutralizante no tanque de missão", button: "CORRIGIR AGORA", urgency: "critical" },
+                    action2: { title: "Acelerar Paletização", desc: "Aumentar velocidade de esteira em 10% de forma gradual", button: "AUMENTAR RITMO", urgency: "warning" }
+                },
                 stats: [
                     { label: "Eficiência de Envase", val: "99.2%", icon: "fa-bottle-water" },
                     { label: "Consumo de Água", val: "12m³/h", icon: "fa-droplet" },
@@ -251,6 +261,11 @@
             },
             semi: {
                 sensors: 890, latency: "2ms",
+                smartControl: {
+                    gateway: "Nano-Edge",
+                    action1: { title: "Compensação Micro-Vibração", desc: "Ativar amortecedores piezoelétricos na Zona 4", button: "ESTABILIZAR AGORA", urgency: "critical" },
+                    action2: { title: "Diagnóstico de Filamento", desc: "Executar teste preditivo de vida útil do tungstênio", button: "VERIFICAR ESTADO", urgency: "warning" }
+                },
                 stats: [
                     { label: "Taxa de Acerto (Yield)", val: "94.8%", icon: "fa-microchip" },
                     { label: "Partículas/m³", val: "0.002", icon: "fa-wind" },
@@ -342,19 +357,20 @@
             `).join('');
 
             // Side Panel
+            const ctrl = data.smartControl;
             document.getElementById('side-panel').innerHTML = `
                 <h3 style="margin:0; font-size:18px;">Controle Inteligente</h3>
-                <div class="alert-card critical">
-                    <div style="font-size: 12px; font-weight: 800; color: var(--danger); margin-bottom:5px;">AÇÃO RECOMENDADA</div>
-                    <div style="font-weight: 700;">Simular Intervenção</div>
-                    <p style="font-size: 13px; color: #888;">Forçar desligamento de emergência no gateway ${key === 'semi' ? 'Nano-Edge' : 'Steel-Edge'}.</p>
-                    <button class="btn-action btn-primary" onclick="triggerToast()">EXECUTAR PROTOCOLO</button>
+                <div class="alert-card ${ctrl.action1.urgency}">
+                    <div style="font-size: 12px; font-weight: 800; color: var(--${ctrl.action1.urgency === 'critical' ? 'danger' : 'warning'}); margin-bottom:5px;">${ctrl.action1.urgency.toUpperCase()}</div>
+                    <div style="font-weight: 700;">${ctrl.action1.title}</div>
+                    <p style="font-size: 13px; color: #888;">${ctrl.action1.desc}</p>
+                    <button class="btn-action btn-primary" onclick="triggerToast()">${ctrl.action1.button}</button>
                 </div>
-                <div class="alert-card warning">
-                    <div style="font-size: 12px; font-weight: 800; color: var(--warning); margin-bottom:5px;">OTIMIZAÇÃO</div>
-                    <div style="font-weight: 700;">Reduzir Cadência</div>
-                    <p style="font-size: 13px; color: #888;">Redução de 5% no ritmo para equilibrar consumo elétrico de pico.</p>
-                    <button class="btn-action btn-outline" onclick="triggerToast()">APLICAR AJUSTE</button>
+                <div class="alert-card ${ctrl.action2.urgency}">
+                    <div style="font-size: 12px; font-weight: 800; color: var(--${ctrl.action2.urgency === 'warning' ? 'warning' : 'success'}); margin-bottom:5px;">${ctrl.action2.urgency.toUpperCase()}</div>
+                    <div style="font-weight: 700;">${ctrl.action2.title}</div>
+                    <p style="font-size: 13px; color: #888;">${ctrl.action2.desc}</p>
+                    <button class="btn-action btn-outline" onclick="triggerToast()">${ctrl.action2.button}</button>
                 </div>
             `;
         }
